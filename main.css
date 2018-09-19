@@ -74,7 +74,6 @@ ul {
  * checkboxes and radios)
  */
 
-input,
 textarea,
 button {
   border: 0;
@@ -88,6 +87,15 @@ button {
   text-align: left;
 }
 
+input[type=text] {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  padding: 20px;
+}
 
 button:hover,
 button:active,
@@ -120,7 +128,7 @@ body {
   margin-right: auto;
   margin-top: 2em;
   overflow: hidden;
-  min-width: 15em;
+  min-width: 10em;
   background: #222;
 }
 
