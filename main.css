@@ -159,6 +159,7 @@ button:hover {
 .row button:last-child {
   background: orange;
   opactiy: 1;
+  color: white;
 }
 .clear {
   flex-basis: 25%;
