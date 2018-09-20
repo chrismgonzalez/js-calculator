@@ -1,89 +1,95 @@
+let runningTotal = 0;
+let buffer = "0";
+let previousOperator;
+const screen = document.querySelector(".calculator__display");
 
-//initialize calculator object
-const calculator = {
-  displayValue: '0',
-  firstOperand: null,
-  waitingForSecondOperand: false,
-  operator: null,
-};
-
-//update display
-function updateDisplay() {
-  const display = document.querySelector('.calculator__display');
-  display.value = calculator.displayValue;
-}
-
-updateDisplay();
-
-//key click handler
-
-const keys = document.querySelector('.calculator__keys');
-keys.addEventListener('click', (event) => {
-  const { target } = event;
-  if(!target.matches('button')) {
-    return;
-  }
-
-  handleOperator(target.value);
-  updateDisplay();
-  console.log(calculator)
-
-  if(target.classList.contains('clear')) {
-    console.log('clear', target.value);
-    return;
-  }
-
-  inputDigit(target.value);
-  updateDisplay();
-  console.log(calculator)
-});
-
-//display digit on display
-
-function inputDigit(digit) {
-  const { displayValue, waitingForSecondOperand } = calculator;
-
-  if (waitingForSecondOperand === true) {
-    calculator.displayValue = digit;
-    calculator.waitingForSecondOperand = false;
+function buttonClick(value) {
+  if (isNaN(parseInt(value))) {
+    handleSymbol(value);
   } else {
-    calculator.displayValue = displayValue === '0' ? digit: displayValue + digit;
+    handleNumber(value);
   }
-  console.log(calculator)
+  rerender();
 }
 
-function handleOperator(nextOperator) {
-  const { firstOperand, displayValue, operator } = calculator;
-  const inputValue = parseFloat(displayValue);
-
-  if(firstOperand === null) {
-    calculator.firstOperand = inputValue;
-  } else if (operator) {
-    const result = performCalculation[operator](firstOperand, inputValue);
-
-    calculator.displayValue = String(result);
-    calculator.firstOperand = result;
+function handleNumber(value) {
+  if (buffer === "0") {
+    buffer = value;
+  } else {
+    buffer += value;
   }
-
-  calculator.waitingForSecondOperator = true;
-  calculator.operator = nextOperator;
-  console.log(calculator);
 }
 
-const performCalculation = {
-  '/': (firstOperand, secondOperand) => firstOperand / secondOperand,
-  '*': (firstOperand, secondOperand) => firstOperand * secondOperand,
-  '+': (firstOperand, secondOperand) => firstOperand + secondOperand,
-  '-': (firstOperand, secondOperand) => firstOperand - secondOperand,
-  '=': (firstOperand, secondOperand) => secondOperand,
- };
+function handleMath(value) {
+  if (buffer === "0") {
+    // do nothing
+    return;
+  }
 
- function resetCalculator() {
-   calculator.displayValue = '0';
-   calculator.firstOperand = null;
-   calculator.waitingForSecondOperand = false;
-   calculator.operator = null;
-   console.log(calculator);
- }
+  const intBuffer = parseInt(buffer);
+  if (runningTotal === 0) {
+    runningTotal = intBuffer;
+  } else {
+    flushOperation(intBuffer);
+  }
 
+  previousOperator = value;
 
+  buffer = "0";
+}
+
+function flushOperation(intBuffer) {
+  if (previousOperator === "+") {
+    runningTotal += intBuffer;
+  } else if (previousOperator === "-") {
+    runningTotal -= intBuffer;
+  } else if (previousOperator === "×") {
+    runningTotal *= intBuffer;
+  } else {
+    runningTotal /= intBuffer;
+  }
+}
+
+function handleSymbol(value) {
+  switch (value) {
+    case "clear":
+      buffer = "0";
+      runningTotal = 0;
+      break;
+    case "=":
+      if (previousOperator === null) {
+        // need two numbers to do math
+        return;
+      }
+      flushOperation(parseInt(buffer));
+      previousOperator = null;
+      buffer = +runningTotal;
+      runningTotal = 0;
+      break;
+    case "back":
+      if (buffer.length === 1) {
+        buffer = "0";
+      } else {
+        buffer = buffer.substring(0, buffer.length - 1);
+      }
+      break;
+    case "+":
+    case "-":
+    case "×":
+    case "÷":
+      handleMath(value);
+      break;
+  }
+}
+
+function rerender() {
+  screen.value = buffer;
+}
+
+function init() {
+  document.querySelector(".calculator__keys").addEventListener("click", function() {
+    buttonClick(event.target.value);
+  });
+}
+
+init();
