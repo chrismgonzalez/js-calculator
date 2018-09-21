@@ -3,6 +3,7 @@ let buffer = "0";
 let previousOperator;
 const screen = document.querySelector(".calculator__display");
 
+
 function buttonClick(value) {
   if (isNaN(parseInt(value))) {
     handleSymbol(value);
@@ -32,7 +33,6 @@ function handleMath(value) {
   } else {
     flushOperation(intBuffer);
   }
-
   previousOperator = value;
 
   buffer = "0";
@@ -43,7 +43,7 @@ function flushOperation(intBuffer) {
     runningTotal += intBuffer;
   } else if (previousOperator === "-") {
     runningTotal -= intBuffer;
-  } else if (previousOperator === "×") {
+  } else if (previousOperator === "*") {
     runningTotal *= intBuffer;
   } else {
     runningTotal /= intBuffer;
@@ -75,8 +75,8 @@ function handleSymbol(value) {
       break;
     case "+":
     case "-":
-    case "×":
-    case "÷":
+    case "*":
+    case "/":
       handleMath(value);
       break;
   }
