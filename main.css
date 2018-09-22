@@ -108,7 +108,7 @@ button:focus {
 }
 
 html {
-  font-size: 175%;
+  font-size: 150%;
   font-weight: 300;
   line-height: 1.3;
 }
@@ -128,16 +128,15 @@ body {
   margin-right: auto;
   margin-top: 2em;
   overflow: hidden;
-  min-width: 10em;
+  max-width: 10.5em;
   background: #222;
 }
 
 .calculator__display {
   background-color: #222222;
   color: #fff;
-  font-size: 1.714285714em;
-  padding: 0.5em 0.75em;
-  text-align: right;
+  margin-left: 2.5em;
+  text-align: center;
 }
 
 .calculator__keys {
